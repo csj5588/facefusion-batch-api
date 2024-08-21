@@ -12,7 +12,7 @@ What's the difference
 nohup python run.py --face-swapper-model inswapper_128_fp16 --execution-providers cuda cpu --frame-processors face_swapper face_enhancer --execution-thread-count 16 --output-image-resolution 720x1280 --log-level debug --output-video-encoder h264_nvenc &
 ```
 
-**API**
+**Batch Image API**
 
 ```curl
 curl --location --request POST 'http://localhost:8001/api/face-replace' \
@@ -23,6 +23,20 @@ curl --location --request POST 'http://localhost:8001/api/face-replace' \
     "target_path": "./target/t12.jpg",
     "output_path": "./output/o4.jpg",
     "image_scale": "1280x720"
+}'
+```
+
+**Batch Video API**
+
+```curl
+curl --location --request POST '192.168.1.211:8001/api/face-replace-video' \
+--header 'User-Agent: Apifox/1.0.0 (https://apifox.com)' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "source_paths": ["./source/s3.jpg"],
+    "target_path": "./target/tv3.mp4",
+    "output_path": "./output/o3.mp4",
+    "video_scale": "1080x1920"
 }'
 ```
 
