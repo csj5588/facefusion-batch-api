@@ -291,16 +291,16 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.open_browser = args.open_browser
 	facefusion.globals.ui_layouts = args.ui_layouts
 
-class Paths(BaseModel):
+class ImagePaths(BaseModel):
 	source_paths: List[str]
 	target_path: str
 	output_path: str
 	image_scale: str
 
 @app.post("/api/face-replace")
-async def read_root(paths: Paths):
+async def read_root(paths: ImagePaths):
 	clear_reference_faces()
- 
+  
 	facefusion.globals.source_paths = paths.source_paths
 	facefusion.globals.target_path = paths.target_path
 	facefusion.globals.output_path = paths.output_path
@@ -312,6 +312,33 @@ async def read_root(paths: Paths):
 		facefusion.globals.output_image_resolution = image_scale
 	else:
 		facefusion.globals.output_image_resolution = pack_resolution(output_image_resolution)
+
+	conditional_process()
+
+	return { "code": 0, "msg": "success" }
+
+class VideoPaths(BaseModel):
+	source_paths: List[str]
+	target_path: str
+	output_path: str
+	video_scale: str
+
+@app.post("/api/face-replace-video")
+async def read_root(paths: VideoPaths):
+	clear_reference_faces()
+  
+	facefusion.globals.source_paths = paths.source_paths
+	facefusion.globals.target_path = paths.target_path
+	facefusion.globals.output_path = paths.output_path
+	video_scale = paths.video_scale
+
+	output_video_resolution = detect_video_resolution(paths.target_path)
+	output_video_resolutions = create_video_resolutions(output_video_resolution)
+	if video_scale in output_video_resolutions:
+		facefusion.globals.output_video_resolution = video_scale
+	else:
+		facefusion.globals.output_video_resolution = pack_resolution(output_video_resolution)
+		facefusion.globals.output_video_fps = 30.0
 
 	conditional_process()
 
