@@ -1,6 +1,31 @@
 FaceFusion
 ==========
 
+What's the difference
+-------
+
+## Service
+
+**Start**
+
+```shell
+nohup python run.py --face-swapper-model inswapper_128_fp16 --execution-providers cuda cpu --frame-processors face_swapper face_enhancer --execution-thread-count 16 --output-image-resolution 720x1280 --log-level debug --output-video-encoder h264_nvenc &
+```
+
+**API**
+
+```curl
+curl --location --request POST 'http://localhost:8001/api/face-replace' \
+--header 'User-Agent: Apifox/1.0.0 (https://apifox.com)' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "source_paths": ["./source/s1.jpg"],
+    "target_path": "./target/t12.jpg",
+    "output_path": "./output/o4.jpg",
+    "image_scale": "1280x720"
+}'
+```
+
 > Next generation face swapper and enhancer.
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/facefusion/facefusion/ci.yml.svg?branch=master)](https://github.com/facefusion/facefusion/actions?query=workflow:ci)
